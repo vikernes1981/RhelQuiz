@@ -1,24 +1,26 @@
 import random
 
+# Rhel questions found on the internet
+
 rhelQuestions = [
-"1) How to interrupt the boot process and reset the root password.\n", # Check
+"1) How to interrupt the boot process and reset the root password.\n",
 
-"2) How to add repos.\n", #http://repo.eight.example.com/BaseOS and http://repo.eight.example.com/AppStream Check
-"3) How to disable repos.\n", # Check
-"4) How to enable repos.\n", # Check
+"2) How to add repos.\n", #http://repo.eight.example.com/BaseOS and http://repo.eight.example.com/AppStream
+"3) How to disable repos.\n",
+"4) How to enable repos.\n",
 """5) How to create a repo.(Consider createrepo package already installed and 
-you have already copied the packages you want to /root/local_repo)\n""", # Check
+you have already copied the packages you want to /root/local_repo)\n""",
 
-"6) How to change the system time to your (or nearest to you) timezone and ensure NTP sync is configured.\n", # Check
+"6) How to change the system time to your (or nearest to you) timezone and ensure NTP sync is configured.\n",
 
 """7) How to add a secondary IP addresses statically to your current running interface. 
-Do this in a way that doesn’t compromise your existing settings: IPV4 - 10.0.0.5/24 IPV6\n""", # Check
+Do this in a way that doesn’t compromise your existing settings: IPV4 - 10.0.0.5/24 IPV6\n""", 
 """8) How to add a secondary IP addresses statically to your current running interface. 
-Do this in a way that doesn’t compromise your existing settings: IPV6 - fd01::100/64\n""", # Check
+Do this in a way that doesn’t compromise your existing settings: IPV6 - fd01::100/64\n""",
 
-"9) Enable packet forwarding on system1. This should persist after reboot.\n", # Check
+"9) Enable packet forwarding on system1. This should persist after reboot.\n",
 
-"10) System should boot into the multiuser target by default\n", # Check
+"10) System should boot into the multiuser target by default\n", 
 "11) Boot messages should be present (not silenced).\n", # Check
 
 "12) Create a new 2GB volume group named 'vgprac' in /dev/sdb1.\n",
@@ -94,17 +96,7 @@ that it is in your Bash history.)\n""",
 
 "50) Create a VDO volume with a virtual size of 1TiB.\n",]
 
-#"51) Write a shell script named myScript.\n",
-#"- The script should evaluate the first argument provided.\n",
-#"- The shell script, When no argument is provided, will prompt the user for input.\n",
-#"""- The shell script will evaluate whether the argument provided exists as a file or a
-#   directory, or doesn't exist at all.\n""",
-#"- If the argument is a file, the script should give a long listing of the filename.\n",
-#"- If the argument is a directory, the script should give a long listing of the directory properties.\n",
-#"""- If the argument provided doesn't exist as a file or directory, the script should
-#  prompt with 'Argument doesn't exist' where the text argument needs to be
-#   replaced with the actual argument. Also, in this case, this script should stop
-#   immediately with exit code 6.\n""",
+#Rhel answers, hopefully all correct
 
 rhelAnswers= [
 """rd.break enforcing=0 then
@@ -182,20 +174,25 @@ systemctl daemon-reload mount -a""",
 
 # NEED TO ADD CONTAINER QUESTIONS
 
+# Questions/Answer class
 class QA:
   def __init__(self, question, correctAnswer, falseAnswers):
     self.question = question
     self.corrAnsw = correctAnswer
     self.falseAnsw = falseAnswers
 
+# Add the '\n' on every answer for reading easier
 for i in range(0,len(rhelAnswers)):
   rhelAnswers[i] = rhelAnswers[i] + '\n'
 
+# List stores all QA objects
 ItemsList = []
 
+# Adds a question , the right answer and 3 more random answers
 def QAList():
   for question, answer in zip(rhelQuestions, rhelAnswers):
     QA.question = question
     QA.corrAnsw = answer
-    ItemsList.append(QA(QA.question, QA.corrAnsw, [rhelAnswers[random.randint(0,48)],rhelAnswers[random.randint(0,48)],rhelAnswers[random.randint(0,48)],]))
+    ItemsList.append(QA(QA.question, QA.corrAnsw, [rhelAnswers[random.randint(0,48)],
+    rhelAnswers[random.randint(0,48)],rhelAnswers[random.randint(0,48)],]))
   return ItemsList
