@@ -94,7 +94,18 @@ that it is in your Bash history.)\n""",
 
 "49) Configure your system to use PHP version 7.1 as the default version.\n",
 
-"50) Create a VDO volume with a virtual size of 1TiB.\n",]
+"50) Create a VDO volume with a virtual size of 1TiB.\n",
+
+"""51) Create a detached apache http web server container with the name, 
+(site1) and with the tag '1-112' from registry.redhat.io/rhel8/httpd-24:1-112 image.\n""",
+
+"""52) Port 8080 on the container should be mapped to port 8080 on the host.
+Declare the environment variables, HTTPD_USER and HTTPD_PASSWORD and use admin as their values.\n""",
+
+"52) Create and mount the ~/storage/html/ directory as a persistent storage to the container as /var/www/.\n",
+
+"""54) Configure the container as a service using systemd and make the web server/container persistent across reboot.
+(You have to be logged in as the user to do this)\n""",]
 
 #Rhel answers, hopefully all correct
 
@@ -170,7 +181,15 @@ systemctl daemon-reload mount -a""",
 "systemctl enable vsftpd",
 "vim /etc/vsftpd/vsftpd.conf and uncomment anon_upload_enable=YES write_enable=YES and comment anonynous_enable=NO",
 "dnf module list php dnf module remove php:'unwanted version' dnf module install php:7.1",
-"vdo create --name=vdoasync --device=/dev/sdc --vdoLogicalSize=1T --writePolicy=auto"]
+"vdo create --name=vdoasync --device=/dev/sdc --vdoLogicalSize=1T --writePolicy=auto",
+"""skopeo inspect docker://registry.redhat.io/rhel8/httpd-24, podman pull registry.redhat.io/rhel8/httpd-24:1-112, 
+podman run -d --name site1 registry.redhat.io/rhel8/httpd-24:1-112""",
+"podman run -d --name site1 -p 8080:8080/tcp -e HTTPD_USER=admin -e HTTPD_PASSWORD=admin registry.redhat.io/rhel8/httpd-24:1-112",
+"""podman run -d --name site1 -p 8080:8080/tcp -e HTTPD_USER=admin -e HTTPD_PASSWORD=admin
+ -v /home/student/storage:/var/www registry.redhat.io/rhel8/httpd-24:1-112""",
+"""mkdir .config/systemd/user/, cd .config/systemd/user/, podman generate systemd --name site1 --files -new,
+loginctl enable-linger student, stop and remove container, systemctl --user daemon-reload, 
+systemctl --user enable --now container-site1.service""",]
 
 # NEED TO ADD CONTAINER QUESTIONS
 
