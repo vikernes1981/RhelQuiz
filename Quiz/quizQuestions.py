@@ -105,7 +105,22 @@ Declare the environment variables, HTTPD_USER and HTTPD_PASSWORD and use admin a
 "52) Create and mount the ~/storage/html/ directory as a persistent storage to the container as /var/www/.\n",
 
 """54) Configure the container as a service using systemd and make the web server/container persistent across reboot.
-(You have to be logged in as the user to do this)\n""",]
+(You have to be logged in as the user to do this)\n""",
+
+"""55) Add 3 users: harry, natasha, tom. The requirements: 
+The Additional group of the two users: harry, Natasha is the admin group. 
+The user: tom’s login shell should be non-interactive.\n""",
+"""56) Configure your Host Name, IP Address, Gateway and DNS.
+Host name: station.domain40.example.com
+IP Address: 172.24.40.40/24
+Gateway: 172.24.40.1
+DNS/nameserver: 172.24.40.1 \n""",
+"""57) Create a shared directory, “/home/admins”.
+Make it have the following characteristics:
+(1) “/home/admins” belongs to the group, “adminuser” and this directory can be read and written by members of group “adminuser”
+(2) Any files created in “/home/admins” should permit the group members to be able to read and write on the files.\n""",
+"""58) Install a FTP server, and request to anonymous download from /var/ftp/pub catalog.
+ (It needs you to configure yum direct to the already existing file server.)\n""",]
 
 #Rhel answers, hopefully all correct
 
@@ -176,7 +191,7 @@ systemctl daemon-reload mount -a""",
 "nmcli connection modify eth0 +ip4 10.0.0.10/24",
 "vim /etc/ssh/sshd.conf and add AllowUsers lisa",
 "systemctl set-default graphical-target",
-"vim /etc/skel/.bashrc and type HISTORY=2500 for all users and vim .bashrc HISTORY=2500",
+"vim /etc/skel/.bashrc and type HISTORY=2500 for all users and vim .bashrc HISTORY=2500 for your user",
 "dnf install vsftpd",
 "systemctl enable vsftpd",
 "vim /etc/vsftpd/vsftpd.conf and uncomment anon_upload_enable=YES write_enable=YES and comment anonynous_enable=NO",
@@ -189,9 +204,22 @@ podman run -d --name site1 registry.redhat.io/rhel8/httpd-24:1-112""",
  -v /home/student/storage:/var/www registry.redhat.io/rhel8/httpd-24:1-112""",
 """mkdir .config/systemd/user/, cd .config/systemd/user/, podman generate systemd --name site1 --files -new,
 loginctl enable-linger student, stop and remove container, systemctl --user daemon-reload, 
-systemctl --user enable --now container-site1.service""",]
+systemctl --user enable --now container-site1.service""",
+"groupadd admin, useradd -G admin harry, useradd -G admin natasha, useradd -s /sbin/nologin tom",
+"""vim /etc/sysconfig/network-scripts/ifcfg-'name of network', add lines 
+IPADDR=172.24.40.40,PREFIX=24,GATEWAY=172.24.40.1,DNS1=172.24.40.1
+nmcli conn down 'name of network';nmcli conn up 'name of network',
+vim /etc/hostname, add line station.domain40.example.com, systemctl restart systemd-hostnamed.service""",
+"mkdir -p /home/admins,groupadd adminuser, chown :adminuser /home/admins, chmod g+w /home/admins, chmod g+s /home/admins",
+"""You can do this 2 ways, manually or with createrepo.
+Manually : vim /etc/yum.repos.d/local.repo, [name],baseurl=file:///mnt/AppStream (if you get files from cd),
+baseurl=http://GIVEN LINK(if link was given),gpgcheck=0,name='name of your choice',enable=1,
+Createrepo : mkdir -p /home/local_repo, createrepo -d /home/local_repo, dnf config-manager --add-repo file:///mnt/AppStream (if you get files from cd),
+dnf config-manager --add-repo http://GIVEN LINK(if link was given),
+dnf install vsftpd, vim /etc/vsftpd/vsftpd.conf, uncomment anonymous_enable=YES, systemctl restart vsftpd.service, dnf install lftp, lftp localhost""" # Na to dokimasw molis ftiaksw enan ftp server,
+]
 
-# NEED TO ADD CONTAINER QUESTIONS
+# NEED TO ADD MORE CONTAINER QUESTIONS
 
 # Questions/Answer class
 class QA:
